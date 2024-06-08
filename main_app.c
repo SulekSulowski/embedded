@@ -52,6 +52,7 @@ void send_to_queue_task(void *pvParameters)
 {
 	uint32_t number = (uint32_t) pvParameters;
 	BaseType_t rtrn;
+	const TickType_t ticks = pdMS_TO_TICKS(0);
 
 	uint8_t tab[] = "sent \n\r";
 	uint8_t l = strlen((char*)tab);
@@ -61,7 +62,7 @@ void send_to_queue_task(void *pvParameters)
 
 	while(1)
 	{
-		rtrn = xQueueSend(Queue, &number ,0);
+		rtrn = xQueueSend(Queue, &number , ticks);
 		if(rtrn == pdPASS)
 		{
 			HAL_UART_Transmit(&huart3, tab, l, 1);
@@ -78,6 +79,7 @@ void receive_from_queue_task(void *pvParameters)
 {
 	uint32_t number;
 	BaseType_t rtrn;
+	const TickType_t ticks = pdMS_TO_TICKS(100);
 
 	uint8_t tab[] = "received \n\r";
 	uint8_t l = strlen((char*)tab);
@@ -87,7 +89,7 @@ void receive_from_queue_task(void *pvParameters)
 
 	while(1)
 	{
-		rtrn = xQueueReceive(Queue, &number, pdMS_TO_TICKS(100));
+		rtrn = xQueueReceive(Queue, &number, ticks);
 		if(rtrn == pdPASS)
 		{
 			HAL_UART_Transmit(&huart3, tab, l, 1);
