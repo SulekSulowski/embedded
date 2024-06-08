@@ -12,6 +12,8 @@
 #include "usart.h"
 #include "strings.h"
 #include "queue.h"
+#include "stdlib.h"
+
 
 
 int main_app(void);

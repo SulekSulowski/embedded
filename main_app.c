@@ -1,6 +1,4 @@
-
 #include <main_app.h>
-
 
 QueueHandle_t Queue;
 uint32_t length = 5;
@@ -15,7 +13,8 @@ int main_app(void)
 		return 0;
 	}
 
-	xTaskCreate(period_print_task, "print task", 1000, (void*)tab, 1, NULL);
+	xTaskCreate(send_to_queue_task, "send task", 1000, (void*) num, 1, NULL);
+	xTaskCreate(receive_from_queue_task, "receive task", 1000, NULL, 2, NULL);
 
 	vTaskStartScheduler();
 	while(1);
@@ -49,7 +48,6 @@ void continous_print_task(void *pvParameters )
 
 void send_to_queue_task(void *pvParameters)
 {
-
 	BaseType_t rtrn;
 	const TickType_t ticks = pdMS_TO_TICKS(0);
 
