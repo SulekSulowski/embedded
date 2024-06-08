@@ -4,8 +4,8 @@
 
 QueueHandle_t Queue;
 uint32_t length = 5;
-const char tab[] = "siema";
-uint32_t number = 100;
+uint8_t tab[] = "siema";
+uint32_t num = 100;
 
 int main_app(void)
 {
@@ -15,8 +15,7 @@ int main_app(void)
 		return 0;
 	}
 
-	xTaskCreate(send_to_queue_task, "send task", 1000, (void*) number, 1, NULL);
-	xTaskCreate(receive_from_queue_task, "receive task", 1000, NULL, 2, NULL);
+	xTaskCreate(period_print_task, "print task", 1000, (void*)tab, 1, NULL);
 
 	vTaskStartScheduler();
 	while(1);
@@ -50,7 +49,7 @@ void continous_print_task(void *pvParameters )
 
 void send_to_queue_task(void *pvParameters)
 {
-	uint32_t number = (uint32_t) pvParameters;
+
 	BaseType_t rtrn;
 	const TickType_t ticks = pdMS_TO_TICKS(0);
 
@@ -62,10 +61,11 @@ void send_to_queue_task(void *pvParameters)
 
 	while(1)
 	{
-		rtrn = xQueueSend(Queue, &number , ticks);
+		rtrn = xQueueSend(Queue, pvParameters , ticks);
 		if(rtrn == pdPASS)
 		{
-			HAL_UART_Transmit(&huart3, tab, l, 1);
+			HAL_UART_Transmit(&huart3, tab, l, 100);
+
 		}
 		else
 		{
